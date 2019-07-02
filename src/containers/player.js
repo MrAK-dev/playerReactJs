@@ -1,53 +1,46 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
-import { addTrack, findTrack, getTracks } from "../actions/player";
+import VideoList from '../components/videoList'
+import VideoDetail from '../components/videoDetail'
+import {  selectTrack, getTracks } from "../actions/player";
 
 class Player extends Component {
-  addTrackHandler = () => {
-    const { addTrack } = this.props;
-    addTrack(this.trackInput.value);
-    this.trackInput.value = "";
-  };
-  findTrackHandler = () => {
-    const { findTrack } = this.props;
-    findTrack(this.searchTrackInput.value);
-  };
+  onVideo = e => {
+    const { selectTrack } = this.props
+    selectTrack(e)
+  }
   getTrackHandler = () => {
     const { getTracks } = this.props;
-    getTracks();
+    getTracks(this.trackInput.value);
   };
+
   render() {
-    console.log(this.props.tracks);
-    const { tracks } = this.props;
+    const { video } = this.props;
+  
     return (
       <div>
-        <div>
+        <div className="search-bar">
           <input type="text" ref={input => (this.trackInput = input)} />
-          <button onClick={this.addTrackHandler}>Add track</button>
+          {/* // Вместо ref использовать onChange */}
+          <button onClick={this.getTrackHandler}>Get Video</button>
         </div>
-        <div>
-          <input type="text" ref={input => (this.searchTrackInput = input)} />
-          <button onClick={this.findTrackHandler}>Find track</button>
+        <div className='some-wrapper'>
+        {video.selectedVideo && <VideoDetail  video={video.selectedVideo}/>}
+        <VideoList 
+          onVideoSelect={e => this.onVideo(e)}
+          videos={video}
+        />
         </div>
-        <div>
-          <button onClick={this.getTrackHandler}>Get Tracks</button>
-        </div>
-        <ul>
-          {tracks.map((track, index) => (
-            <li key={index}>{track.name}</li>
-          ))}
-        </ul>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  tracks: state.player.filter(track => track.name.includes(state.filterTracks))
+  video: state.player,
 });
 
 export default connect(
   mapStateToProps,
-  { addTrack, findTrack, getTracks }
+  { selectTrack, getTracks }
 )(Player);

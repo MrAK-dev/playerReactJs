@@ -1,22 +1,21 @@
 import {
-  ADD_TRACK,
+  SELECT_TRACK,
   GET_TRACK_REQUEST,
   GET_TRACK_REQUEST_FAIL,
   GET_TRACK_REQUEST_SUCCESS
 } from "../actionsTypes/actionsTypes";
 
-const initialState = [];
+const initialState = {
+  videos:[],
+  selectedVideo: '',
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case ADD_TRACK: {
-      return [
-        ...state,
-        {
-          id: Date.now().toString(),
-          name: action.payload
-        }
-      ];
+    case SELECT_TRACK: {
+      return {
+        ...state,selectedVideo: action.payload
+      };
     }
 
     case GET_TRACK_REQUEST: {
@@ -24,7 +23,7 @@ export default (state = initialState, action) => {
     }
 
     case GET_TRACK_REQUEST_SUCCESS: {
-      return action.payload;
+      return {...state, videos:action.payload.data.items};
     }
 
     case GET_TRACK_REQUEST_FAIL: {

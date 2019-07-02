@@ -9,4 +9,4 @@ export const store = createStore(
   composeWithDevTools(applyMiddleware(thunk))
 );
 
-store.subscribe(state => console.log("state", state));
+// store.subscribe(state => console.log("state", state));
